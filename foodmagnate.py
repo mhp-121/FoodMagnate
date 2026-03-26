@@ -1,13 +1,11 @@
-#Skeleton Program code for the AQA A Level Paper 1 Summer 2020 examination
-#this code should be used in conjunction with the Preliminary Material
-#written by the AQA Programmer Team
-#developed in the Python 3.5.1 programming environment
-
 import math
 import random
 
 def takeInput(string):
-  holder = input(str(string))
+    if string == "blank":
+        holder = input()
+    else:
+        holder = input(str(string))
   while holder == "":
     holder=input("You cannot input nothing, please try again.")
   return holder
@@ -282,7 +280,7 @@ class Simulation:
     self._Companies = []
     self._FuelCostPerUnit = 0.0098
     self._BaseCostforDelivery = 100
-    Choice = takeInput("Enter L for a large settlement, anything else for a normal size settlement: ")
+    Choice = input("Enter L for a large settlement, anything else for a normal size settlement: ") # doesn't use the function takeInput because this input can be blank
     if Choice == "L":
       ExtraX = int(takeInput("Enter additional amount to add to X size of settlement: "))
       ExtraY = int(takeInput("Enter additional amount to add to Y size of settlement: "))
@@ -290,7 +288,7 @@ class Simulation:
       self._SimulationSettlement = LargeSettlement(ExtraX, ExtraY, ExtraHouseholds)
     else:
       self._SimulationSettlement = Settlement()            
-    Choice = input("Enter D for default companies, anything else to add your own start companies: ")
+    Choice = input("Enter D for default companies, anything else to add your own start companies: ") # doesn't use the function takeInput because this input should be blank
     if Choice == "D":
       self._NoOfCompanies = 3
       Company1 = Company("AQA Burgers", "fast food", 100000, 200, 203, self._FuelCostPerUnit, self._BaseCostforDelivery)
@@ -492,7 +490,7 @@ class Simulation:
     Choice = ""
     while Choice != "Q":
       self.DisplayMenu()
-      Choice = takeInput()
+      Choice = takeInput("blank")()
       if Choice == "1":
         self._SimulationSettlement.DisplayHouseholds()
       elif Choice == "2":
