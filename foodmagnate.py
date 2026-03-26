@@ -6,6 +6,12 @@
 import math
 import random
 
+def takeInput():
+  holder = input()
+  while holder == "":
+    holder=input("You cannot input nothing, please try again.")
+  return holder
+
 class Household:
   _NextID = 1
 
