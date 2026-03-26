@@ -178,7 +178,12 @@ class Company:
     self._AvgCostPerMeal += Change
         
   def AlterFuelCostPerUnit(self, Change):
-    self._FuelCostPerUnit += Change
+    FuelCostFloor = 0
+    if (self._FuelCostPerUnit + Change) <= FuelCostFloor:
+      self._FuelCostPerUnit = 0
+    else:
+      self._FuelCostPerUnit += change
+      
 
   def AlterReputation(self, Change):
     self._ReputationScore += Change
