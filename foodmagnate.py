@@ -5,7 +5,6 @@
 
 import math
 import random
-
 class Household:
   _NextID = 1
 
@@ -148,6 +147,7 @@ class Company:
     self._BaseCostOfDelivery = BaseCostOfDelivery
     self._ReputationScore = 100
     self._DailyCosts = 100
+    self._DaysElapsed = 0
     if self._Category == "fast food":
       self._AvgCostPerMeal = 5
       self._AvgPricePerMeal = 10
@@ -176,7 +176,7 @@ class Company:
 
   def AlterAvgCostPerMeal(self, Change):
     self._AvgCostPerMeal += Change
-        
+       
   def AlterFuelCostPerUnit(self, Change):
     self._FuelCostPerUnit += Change
 
@@ -184,6 +184,8 @@ class Company:
     self._ReputationScore += Change
 
   def NewDay(self):
+    self._DaysElapsed += 1
+   
     for O in self._Outlets:
       O.NewDay()
            
@@ -225,14 +227,14 @@ class Company:
     self._Balance += ProfitLossFromOutlets - self._DailyCosts - DeliveryCosts
     Details += "New balance for company: " + str(self._Balance)
     return Details
-      
+     
   def CloseOutlet(self, ID):
     CloseCompany = False
     del(self._Outlets[ID])
     if len(self._Outlets) == 0:
       CloseCompany = True
     return CloseCompany
-      
+     
   def ExpandOutlet(self, ID):
     Change = int(input("Enter amount you would like to expand the capacity by: "))
     Result = self._Outlets[ID].AlterCapacity(Change)
@@ -240,7 +242,7 @@ class Company:
       print("Capacity adjusted.")
     else:
       print("Only some of that capacity added, outlet now at maximum capacity.")
-        
+       
   def OpenOutlet(self, X, Y):
     if self._Category == "fast food":
       self._Balance -= self._FastFoodOutletCost
@@ -253,7 +255,7 @@ class Company:
       self._Capacity = self._NamedChefOutletCapacity
     NewOutlet = Outlet(X, Y, self._Capacity)
     self._Outlets.append(NewOutlet)
-        
+       
   def __GetListOfOutlets(self):
     Temp = []
     for Current in range (0, len(self._Outlets)):
@@ -306,7 +308,7 @@ class Simulation:
       self._NoOfCompanies = int(input("Enter number of companies that exist at start of simulation: "))
       for Count in range (1, self._NoOfCompanies + 1):
         self.AddCompany()
-            
+           
   def DisplayMenu(self):
     print("\n*********************************")
     print("**********    MENU     **********")
@@ -322,7 +324,7 @@ class Simulation:
   def __DisplayCompaniesAtDayEnd(self):
     print("\n**********************")
     print("***** Companies: *****")
-    print("**********************\n")
+    print(f"**********************\n\n\nDays Elapsed:{self._Companies[0]._DaysElapsed}")
     for C in self._Companies:
       print(C.GetName())
       print()
@@ -334,7 +336,7 @@ class Simulation:
     for Count in range(1, NoOfNewHouseholds + 1):
       self._SimulationSettlement.AddHousehold()
     print(str(NoOfNewHouseholds) + " new households have been added to the settlement.")
-        
+       
   def __ProcessCostOfFuelChangeEvent(self):
     FuelCostChange = random.randint(1, 9) / 10.0
     UpOrDown = random.randint(0, 1)
@@ -345,7 +347,7 @@ class Simulation:
       print("The cost of fuel has gone down by " + str(FuelCostChange) + " for " + self._Companies[CompanyNo].GetName())
       FuelCostChange *= -1
     self._Companies[CompanyNo].AlterFuelCostPerUnit(FuelCostChange)
-        
+       
   def __ProcessReputationChangeEvent(self):
     ReputationChange = random.randint(1, 9) / 10.0
     UpOrDown = random.randint(0, 1)
@@ -356,7 +358,7 @@ class Simulation:
       print("The reputation of " + self._Companies[CompanyNo].GetName() + " has gone down by " + str(ReputationChange))
       ReputationChange *= -1
     self._Companies[CompanyNo].AlterReputation(ReputationChange)
-        
+       
   def __ProcessCostChangeEvent(self):
     CostToChange = random.randint(0, 1)
     UpOrDown = random.randint(0, 1)
@@ -378,7 +380,7 @@ class Simulation:
         print("The average cost of a meal for " + self._Companies[CompanyNo].GetName() + " has gone down by " + str(AmountOfChange))
         AmountOfChange *= -1
       self._Companies[CompanyNo].AlterAvgCostPerMeal(AmountOfChange)
-        
+       
   def __DisplayEventsAtDayEnd(self):
     print("\n***********************")
     print("*****   Events:   *****")
@@ -420,7 +422,7 @@ class Simulation:
           Current += 1
     self.__DisplayCompaniesAtDayEnd()
     self.__DisplayEventsAtDayEnd()
-        
+       
   def AddCompany(self):
     CompanyName = input("Enter a name for the company: ")
     Balance = int(input("Enter the starting balance for the company: "))
@@ -436,7 +438,7 @@ class Simulation:
     X, Y = self._SimulationSettlement.GetRandomLocation()
     NewCompany = Company(CompanyName, TypeOfCompany, Balance, X, Y, self._FuelCostPerUnit, self._BaseCostforDelivery)
     self._Companies.append(NewCompany)
-        
+       
   def GetIndexOfCompany(self, CompanyName):
     Index = -1
     for Current in range (0, len(self._Companies)):
@@ -481,7 +483,7 @@ class Simulation:
     for C in self._Companies:
       print(C.GetDetails() + "\n")
     print()
-        
+       
   def Run(self):
     Choice = ""
     while Choice != "Q":
